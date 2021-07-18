@@ -8,13 +8,7 @@ export const fieldSlice = createSlice({
             { key: 1,
               screenName: 'screen1',
               screenPage: null},
-            { key: 2,
-              screenName: 'screen2',
-              screenPage: null},
-            { key: 3,
-              screenName: 'screen3',
-              screenPage: null},
-        ]
+            ]
     },
     reducers: {
         AddField: (state, action) => {

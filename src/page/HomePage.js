@@ -58,7 +58,7 @@ export default function HomeScreen({ navigation }) {
         }
           </ScrollView>
 
-          <FABGroup navigation={navigation} />
+          <FABGroup navigation={navigation} screenName="AddEntryScreen"/>
       </View>
     
   );

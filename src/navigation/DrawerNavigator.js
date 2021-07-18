@@ -2,10 +2,8 @@ import React, {useState} from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 
 import DrawerContent from '../components/CustomSidebar';
-import DatabaseScreen from '../page/DatabasePage';
-// import GeneralScreen from '../page/GeneralPage';
 
-import { HomeStackScreen, SettingsStackScreen, GeneralStackScreen } from './StackNavigator';
+import { HomeStackScreen, newFieldStackScreen, GeneralStackScreen } from './StackNavigator';
 import { useSelector, useDispatch } from 'react-redux'
 import { selectFields } from '../reducers/fieldReducer';
 
@@ -14,15 +12,7 @@ const Drawer = createDrawerNavigator();
 export default function DrawerNavigator(){
     const screens = useSelector(selectFields)
     const dispatch = useDispatch()
-    // const screens = [{  screen:SettingsStackScreen,
-    //                     name:'screen1',
-    //                     key: 1 }, 
-    //                 {   screen:DatabaseScreen,
-    //                     name:'screen2',
-    //                     key: 2 },
-    //                 {   screen:DatabaseScreen,
-    //                     name:'screen3',
-    //                     key: 3 }];
+    
     
     return (
         // <NavigationContainer theme={theme}>
@@ -40,6 +30,10 @@ export default function DrawerNavigator(){
                         component={GeneralStackScreen} />
                 ))}
                 
+                <Drawer.Screen 
+                    name="newFieldStack" 
+                    component={newFieldStackScreen} />
+
             </Drawer.Navigator>
         // </NavigationContainer>
     )

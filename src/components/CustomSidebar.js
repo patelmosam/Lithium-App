@@ -104,6 +104,18 @@ export default function DrawerContent(props) {
                             ))
                         }
 
+                        <DrawerItem 
+                            icon={({color, size}) => (
+                                <Icon 
+                                name="home-outline" 
+                                color={color}
+                                size={size}
+                                />
+                            )}
+                            label="Create New Field"
+                            onPress={() => {props.navigation.navigate('newFieldStack')}}
+                        />
+
                     </Drawer.Section>
                     <Drawer.Section title="Preferences">
                         <TouchableRipple onPress={() => {toggleTheme()}}>

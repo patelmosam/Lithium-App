@@ -7,10 +7,14 @@ import GeneralScreen from '../page/GeneralPage';
 import AddEntryScreen from '../page/AddEntryPage';
 import ContactScreen from '../page/ContactPage';
 import UpdateEntryScreen from '../page/updateEntryPage';
+import newFieldScreen from '../page/newFieldPage';
+import manageFieldsScreen from '../page/manageFields';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const HomeStack = createStackNavigator();
 const SettingsStack = createStackNavigator();
+const GeneralStack = createStackNavigator();
+const newFieldStack = createStackNavigator();
 
 export const HomeStackScreen = ({navigation}) => (
 
@@ -63,7 +67,7 @@ export function GeneralStackScreen({navigation, route}){
     const {name} = route.params;
 
     return (
-    <SettingsStack.Navigator screenOptions={{
+    <GeneralStack.Navigator screenOptions={{
           headerStyle: {
           backgroundColor: '#009387',
           },
@@ -72,12 +76,34 @@ export function GeneralStackScreen({navigation, route}){
           fontWeight: 'bold'
           }
       }}>
-          <SettingsStack.Screen name={name} component={GeneralScreen} options={{
+          <GeneralStack.Screen name={name} component={GeneralScreen} options={{
           headerLeft: () => (
               <Icon.Button name="ios-menu" size={25} backgroundColor="#009387" onPress={() => navigation.openDrawer()}></Icon.Button>
           )
           }} />
-    </SettingsStack.Navigator>
+    </GeneralStack.Navigator>
     );
 };
+
+export const newFieldStackScreen = ({navigation}) => (
+    <newFieldStack.Navigator screenOptions={{
+          headerStyle: {
+          backgroundColor: '#009387',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+          fontWeight: 'bold'
+          }
+      }}>
+          <newFieldStack.Screen name="manageFieldsScreen" component={manageFieldsScreen} options={{
+            title:'Manage Fields',
+            headerLeft: () => (
+                <Icon.Button name="ios-menu" size={25} backgroundColor="#009387" onPress={() => navigation.openDrawer()}></Icon.Button>
+            )
+          }} />
+          <newFieldStack.Screen name="newFieldScreen" component={newFieldScreen} options={{
+            title:'Create New Field',
+          }} />
+    </newFieldStack.Navigator>
+);
 
