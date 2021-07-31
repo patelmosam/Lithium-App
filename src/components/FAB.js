@@ -39,12 +39,12 @@ import { FAB, Portal, Provider } from 'react-native-paper';
 // export default FABGroup;
 
 
-export default function MyFAB({navigation, screenName}){
+export default function MyFAB({navigation, screenName, type}){
   
   return (<FAB
     style={styles.fab}
     icon="plus"
-    onPress={() => navigation.navigate(screenName)}
+    onPress={() => navigation.navigate(screenName, {type:type})}
   />);
 };
 

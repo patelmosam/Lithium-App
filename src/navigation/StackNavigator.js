@@ -9,6 +9,7 @@ import ContactScreen from '../page/ContactPage';
 import UpdateEntryScreen from '../page/updateEntryPage';
 import newFieldScreen from '../page/newFieldPage';
 import manageFieldsScreen from '../page/manageFields';
+import GenAddEntryScreen from '../page/GenAddPage';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const HomeStack = createStackNavigator();
@@ -80,6 +81,9 @@ export function GeneralStackScreen({navigation, route}){
           headerLeft: () => (
               <Icon.Button name="ios-menu" size={25} backgroundColor="#009387" onPress={() => navigation.openDrawer()}></Icon.Button>
           )
+          }} />
+          <GeneralStack.Screen name="GenAddEntryScreen" component={GenAddEntryScreen} options={{
+          title:'Add Entry',
           }} />
     </GeneralStack.Navigator>
     );

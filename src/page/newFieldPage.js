@@ -1,43 +1,45 @@
 import React, { useState, useEffect } from 'react';
-import {StyleSheet, View, ScrollView } from 'react-native';
-// import { useSelector, useDispatch } from 'react-redux'
-// import FABGroup from '../components/FAB';
+import {StyleSheet, View, ScrollView, Text } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux'
 import { useTheme } from '@react-navigation/native';
-import { InitDB } from '../shared/database';
+// import { InitDB } from '../shared/database';
 import { TextInput, Button } from 'react-native-paper';
-import DropDown from "react-native-paper-dropdown";
 import {Picker} from '@react-native-picker/picker';
+import { AddField } from '../reducers/fieldReducer';
 
 export default function newFieldScreen({ navigation }) {
 
   const { colors } = useTheme();
   const theme = useTheme();
 
-  const [name, setName] = useState(null);
+  const dispatch = useDispatch();
+  // const fields = useSelector(selectFields);
+
+  const [name, setName] = useState("");
 
   const [keys, setKeys] = useState([0]);
   const [fieldName, setfieldName] = useState({0:''});
   const [selectedType, setSelectedType] = useState({0:null});
   
-  // let fields = [{key:0, fieldName: '', fieldType: null}]
-//   const contacts = useSelector(selectContacts)
-//   const dispatch = useDispatch()
-    // useEffect(()=>{
-    //   console.log(keys, fieldName, selectedType);
-    // },[selectedType, fieldName, keys])
-  
 
-    const additem = () => {
+  const additem = () => {
       setfieldName({...fieldName, [keys.length]:''});
       setSelectedType({...selectedType, [keys.length]:null});
       let newKeys = keys;
       newKeys.push(keys.length);
       setKeys(newKeys);
       
-        // console.log(keys, fieldName, selectedType);
     }
 
-    
+  const updateData = () => {
+     let fields = {};
+
+     for (let i in fieldName){
+        fields[fieldName[i]] = selectedType[i];
+     }
+     dispatch(AddField({'id':0, 'name':name, 'schema':fields}));
+     navigation.goBack();
+  }
 
   return (
      
@@ -75,12 +77,20 @@ export default function newFieldScreen({ navigation }) {
                     }>
                     
                     <Picker.Item label="Text" value="TEXT" />
-                    <Picker.Item label="Number" value="INTERGER" />
+                    <Picker.Item label="Number" value="INTEGER" />
                   </Picker>
                 </View>
             </View>
         ))}
         <Button  onPress={() => additem()} mode="contained"> Add </Button>
+        <View style={styles.buttonView}>
+            <View style={styles.cancelButton} >
+            <Button color='red' onPress={() => navigation.goBack()} mode="contained"> Cancel </Button>
+            </View>
+            <View style={styles.saveButton} >
+            <Button  onPress={() => updateData()} mode="contained"> Save </Button>
+            </View>
+        </View>
         </ScrollView>
     </View>
     
@@ -120,6 +130,23 @@ const styles = StyleSheet.create({
     alignSelf:'stretch',
     flex: 1,
     color: 'white',
+  },
+  buttonView: {
+    // width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+    marginTop: 50,
+    // backgroundColor:'#fff',
+  },
+  saveButton: {
+    // color: 'blue',
+    width: '20%',
+    marginLeft: 40
+  },
+  cancelButton: {
+    width: '28%',
+    marginRight: 40,
     
-  }
+  }  
 });

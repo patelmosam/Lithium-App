@@ -29,19 +29,6 @@ export default function DrawerContent(props) {
     const paperTheme = useTheme();
     const { toggleTheme } = React.useContext(ThemeContext);
 
-    // const screens = ['screen1', 'screen2', 'screen3'];
-    // const screens = [{  screen:null,
-    //     name:'screen1',
-    //     key: 1 }, 
-    // {   screen:null,
-    //     name:'screen2',
-    //     key: 2 },
-    // {   screen:null,
-    //     name:'screen3',
-    //     key: 3 },
-    // {   screen:null,
-    //     name:'screen4',
-    //     key: 4 },];
 
     return(
         <View style={{flex:1}}>
@@ -87,19 +74,18 @@ export default function DrawerContent(props) {
                             onPress={() => {props.navigation.navigate('HomeStack')}}
                         />
                        
-                       
                         {
                             screens.map((screen) => (
-                            <DrawerItem key={screen.key}
+                            <DrawerItem key={screen.id}
                                 icon={({color, size}) => (
                                     <Icon 
-                                    name="cog-outline" 
+                                    name="folder" 
                                     color={color}
                                     size={size}
                                     />
                                 )}
-                                label={screen.screenName}
-                                onPress={() => {props.navigation.navigate(screen.screenName, {name:screen.screenName})}}
+                                label={screen.name}
+                                onPress={() => {props.navigation.navigate(screen.name, {name:screen.name})}}
                             />
                             ))
                         }
@@ -107,17 +93,30 @@ export default function DrawerContent(props) {
                         <DrawerItem 
                             icon={({color, size}) => (
                                 <Icon 
-                                name="home-outline" 
+                                name="playlist-plus" 
                                 color={color}
                                 size={size}
                                 />
                             )}
-                            label="Create New Field"
+                            label="Manage Tables"
                             onPress={() => {props.navigation.navigate('newFieldStack')}}
                         />
 
+                        
+
                     </Drawer.Section>
                     <Drawer.Section title="Preferences">
+                        <DrawerItem 
+                            icon={({color, size}) => (
+                                <Icon 
+                                name="cog-outline" 
+                                color={color}
+                                size={size}
+                                />
+                            )}
+                            label="Settings"
+                            onPress={() => {props.navigation.navigate('settings')}}
+                        />
                         <TouchableRipple onPress={() => {toggleTheme()}}>
                             <View style={styles.preference}>
                                 <Text>Dark Theme</Text>

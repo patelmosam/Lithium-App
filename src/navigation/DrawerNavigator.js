@@ -3,7 +3,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 
 import DrawerContent from '../components/CustomSidebar';
 
-import { HomeStackScreen, newFieldStackScreen, GeneralStackScreen } from './StackNavigator';
+import { HomeStackScreen, newFieldStackScreen, GeneralStackScreen, SettingsStackScreen } from './StackNavigator';
 import { useSelector, useDispatch } from 'react-redux'
 import { selectFields } from '../reducers/fieldReducer';
 
@@ -22,11 +22,15 @@ export default function DrawerNavigator(){
                 <Drawer.Screen 
                     name="HomeStack" 
                     component={HomeStackScreen} />
+                
+                <Drawer.Screen 
+                    name="settings" 
+                    component={SettingsStackScreen} />
 
                 { screens.map((screen) => (
                     <Drawer.Screen
-                        key={screen.key}
-                        name={screen.screenName} 
+                        key={screen.id}
+                        name={screen.name} 
                         component={GeneralStackScreen} />
                 ))}
                 
