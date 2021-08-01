@@ -1,10 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit'
-import contactReducer from './reducers/contactReducer';
+import dataReducer from './reducers/dataReducer';
 import fieldReducer from './reducers/fieldReducer';
 
 export default configureStore({  
 	reducer: {    
-		contacts: contactReducer,  
+		appData: dataReducer,  
 		fields: fieldReducer,
 	},
 })

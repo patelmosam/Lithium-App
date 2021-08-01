@@ -3,7 +3,7 @@ import {StyleSheet, View, Text, Button,
   ScrollView, TouchableWithoutFeedback } from 'react-native';
 // import { TouchableRipple } from 'react-native-paper';
 import { useSelector, useDispatch } from 'react-redux'
-import { contactAdded, contactsInit, selectContacts } from '../reducers/contactReducer';
+import { dataAdded, datasInit, selectData } from '../reducers/dataReducer';
 import { InitFields } from '../reducers/fieldReducer';
 import * as SQLite from 'expo-sqlite';
 import FABGroup from '../components/FAB';
@@ -21,7 +21,7 @@ export default function HomeScreen({ navigation }) {
   const theme = useTheme();
 
   // const [state, setState] = useState({ data: null});
-  const contacts = useSelector(selectContacts);
+  const data = useSelector(selectData);
   // const fields = useSelector(selectFields)
   const dispatch = useDispatch();
 
@@ -66,7 +66,7 @@ export default function HomeScreen({ navigation }) {
         }
           </ScrollView> */}
 
-          <FABGroup navigation={navigation} screenName="AddEntryScreen"/>
+          {/* <FABGroup navigation={navigation} screenName="AddEntryScreen"/> */}
       </View>
     
   );

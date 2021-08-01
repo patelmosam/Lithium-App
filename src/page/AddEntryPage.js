@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, ScrollView, View, Text, form } from 'react-native';
 // import AppBar from '../components/AppBar';
-import { contactAdded, selectContacts } from '../reducers/contactReducer';
+// import { contactAdded, selectContacts } from '../reducers/contactReducer';
 import { useDispatch } from 'react-redux'
 import { useTheme } from '@react-navigation/native';
 import { TextInput, Button } from 'react-native-paper';

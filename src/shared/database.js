@@ -40,14 +40,30 @@ export function InsertInfo(data) {
   })
 }
 
-export function InsertData(table, data) {
-  // TODO Fix this method
+function getData(table) {
   const db = SQLite.openDatabase('database3.db')
-  // db.transaction(tx => {
-  //   tx.executeSql(quary, data,
-  //     (txObj, resultSet) => console.log('Data Added'),
-  //     (txObj, error) => console.log('Error', error))
-  // })
+  db.transaction(tx => {
+    tx.executeSql(`SELECT  FROM ${table}`, null, 
+      (txObj, { rows: { _array } }) =>  console.log(_array) ,
+      (txObj, error) => console.log('Error ', error)
+      ) 
+  })
+}
+
+export function InsertData(table, data) {
+
+  let quary_str = `INSERT INTO ${table} values (`;;
+
+  const results = Object.keys(data).map((key) => data[key]);
+  results.map(() => quary_str += ' ?,');
+  quary_str = quary_str.substring(0, quary_str.length-1) + ')';
+  // console.log('results: ',results, quary_str);
+  const db = SQLite.openDatabase('database3.db') 
+  db.transaction(tx => {
+    tx.executeSql(quary_str, results,
+      (txObj, resultSet) => console.log('Data Added'),
+      (txObj, error) => console.log('Error', error))
+  })
 }
 
 export function DeleteData(id) {

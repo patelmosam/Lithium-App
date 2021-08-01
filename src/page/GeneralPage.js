@@ -6,7 +6,7 @@ import { useTheme, useRoute } from '@react-navigation/native';
 import * as SQLite from 'expo-sqlite';
 // import { InitDB } from '../shared/database';
 // import { GenAddEntryScreen } from './GenAddPage';
-import { selectContacts, contactsInit } from '../reducers/contactReducer';
+import { selectData, dataInit } from '../reducers/dataReducer';
 import { useIsFocused } from "@react-navigation/native";
 
 
@@ -16,26 +16,26 @@ export default function GeneralScreen({ navigation, name }) {
   const theme = useTheme();
   const route = useRoute();
   // const [state, setState] = useState({ data: null});
-  const contacts = useSelector(selectContacts)
-  const dispatch = useDispatch()
+  const appData = useSelector(selectData);
+  const dispatch = useDispatch();
   const isFocused = useIsFocused();
 
     const fetchData = (table) => {
       const db = SQLite.openDatabase('database3.db')
       db.transaction(tx => {
         tx.executeSql(`SELECT * FROM ${table}`, null, 
-          (txObj, { rows: { _array } }) =>  dispatch(contactsInit(_array))  ,
+          (txObj, { rows: { _array } }) =>  dispatch(dataInit({data:_array, type: table}))  ,
           (txObj, error) => console.log('Error ', error)
           ) 
       })
     }
 
-    const Init = () => {
-        console.log(route.name)
-    }
+    // const Init = () => {
+    //     console.log(route.name)
+    // }
 
     useEffect(() => {
-        Init();
+        // Init();
         fetchData(route.name);
     }, [navigation.isFocused])
 
@@ -43,9 +43,10 @@ export default function GeneralScreen({ navigation, name }) {
      
       <View style={styles.container}>
        <ScrollView style={styles.scrollStyle} >
-       {contacts.map((contact) => (
-         <View key={contact.id}>
-           <Text style={styles.TextStyle}>{JSON.stringify(contact)}</Text>
+         {/* {console.log(appData)} */}
+       { appData[route.name] && appData[route.name].map((data) => (
+         <View key={data.id}>
+           <Text style={styles.TextStyle}>{JSON.stringify(data)}</Text>
          </View>
        ))}
         </ScrollView>

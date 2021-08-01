@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, ScrollView, View, Text, form } from 'react-native';
-import { contactAdded, selectContacts } from '../reducers/contactReducer';
+import { dataAdded, selectData } from '../reducers/dataReducer';
 import { useSelector, useDispatch } from 'react-redux'
 import { useTheme } from '@react-navigation/native';
 import { TextInput, Button } from 'react-native-paper';
@@ -12,7 +12,7 @@ function GenAddEntryScreen({ navigation, route }) {
   const [formData, setFormData] = useState({});
   const [forms, setForms] = useState([]);
   const fields = useSelector(selectFields);
-//   const contacts = useSelector(selectContacts);
+//   const contacts = useSelector(selectData);
   const dispatch = useDispatch()
   const type = route.params.type;
 
@@ -20,8 +20,8 @@ function GenAddEntryScreen({ navigation, route }) {
 
   const additem = () => {
     if (formData.name != '' && formData.surname != ''){
-      dispatch(contactAdded(formData));
-    console.log(formData);
+      dispatch(dataAdded({id:0, data:formData, type:type}));
+    // console.log(formData);
       navigation.goBack();
     }
   }
