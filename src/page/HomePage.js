@@ -4,12 +4,10 @@ import {StyleSheet, View, Text, Button,
 // import { TouchableRipple } from 'react-native-paper';
 import { useSelector, useDispatch } from 'react-redux'
 import { dataAdded, datasInit, selectData } from '../reducers/dataReducer';
-import { InitFields } from '../reducers/fieldReducer';
+import { InitFields, AddField } from '../reducers/fieldReducer';
 import * as SQLite from 'expo-sqlite';
-import FABGroup from '../components/FAB';
-// import CustomButton from '../components/CustomButton';
 import ContactItem from '../components/ContactItem';
-import { InitDB } from '../shared/database';
+import { InitDB, InitTable } from '../shared/database';
 import { useTheme } from '@react-navigation/native';
 
 const db = SQLite.openDatabase('database3.db')
@@ -20,32 +18,35 @@ export default function HomeScreen({ navigation }) {
 
   const theme = useTheme();
 
-  // const [state, setState] = useState({ data: null});
   const data = useSelector(selectData);
-  // const fields = useSelector(selectFields)
+ 
   const dispatch = useDispatch();
 
+  const defaultFields = [
+                        {name:'Contacts',
+                        schema: {name: 'TEXT', surname: 'TEXT', phone_no: 'INTEGER', gender: 'TEXT', discription: 'TEXT'},
+                        fieldOrder: ['name', 'surname', 'phone_no', 'gender', 'discription']},
+                      ];
 
-  fetchData = () => {
+  const InitTables = (defaultTables) => {
     const db = SQLite.openDatabase('database3.db')
     db.transaction(tx => {
       tx.executeSql('SELECT * FROM TablesInfo', null, 
-        (txObj, { rows: { _array } }) =>  dispatch(InitFields(_array))  ,
+        (txObj, { rows: { _array } }) =>  dispatch(InitFields({data:_array, default: defaultTables}))  ,
         (txObj, error) => console.log('Error ', error)
         ) 
     })
   }
 
   const init = () => {
-    const quary = 'CREATE TABLE IF NOT EXISTS Contacts (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, surname TEXT, phone_no INTEGER, gander TEXT, discription TEXT)';
-    InitDB(quary);
     const quary2 = 'CREATE TABLE IF NOT EXISTS TablesInfo (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, schema TEXT)';
     InitDB(quary2);
+    defaultFields.map((item) => InitTable(item.name, item.schema));
+    InitTables(defaultFields);    
   }
 
     useEffect(() => {
-      init();
-      fetchData(); 
+      init();      
     }, [])
 
   return (

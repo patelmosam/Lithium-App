@@ -4,12 +4,13 @@ import HomeScreen from '../page/HomePage';
 import SettingsScreen from '../page/SettingsPage';
 // import AppBar from '../components/AppBar';
 import GeneralScreen from '../page/GeneralPage';
-import AddEntryScreen from '../page/AddEntryPage';
-import ContactScreen from '../page/ContactPage';
+// import AddEntryScreen from '../page/AddEntryPage';
+// import ContactScreen from '../page/ContactPage';
 import UpdateEntryScreen from '../page/updateEntryPage';
 import newFieldScreen from '../page/newFieldPage';
 import manageFieldsScreen from '../page/manageFields';
 import GenAddEntryScreen from '../page/GenAddPage';
+import GenItemScreen from '../page/GenItemPage';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const HomeStack = createStackNavigator();
@@ -34,15 +35,15 @@ export const HomeStackScreen = ({navigation}) => (
               <Icon.Button name="ios-menu" size={25} backgroundColor="#009387" onPress={() => navigation.openDrawer()}></Icon.Button>
           )
           }} />
-          <HomeStack.Screen name="ContactScreen" component={ContactScreen} options={{
+          {/* <HomeStack.Screen name="ContactScreen" component={ContactScreen} options={{
           title:'Contact',
-          }} />
-          <HomeStack.Screen name="AddEntryScreen" component={AddEntryScreen} options={{
+          }} /> */}
+          {/* <HomeStack.Screen name="AddEntryScreen" component={AddEntryScreen} options={{
           title:'Add Entry',
-          }} />
-          <HomeStack.Screen name="UpdateEntryScreen" component={UpdateEntryScreen} options={{
+          }} /> */}
+          {/* <HomeStack.Screen name="UpdateEntryScreen" component={UpdateEntryScreen} options={{
           title:'Update Entry',
-          }} />
+          }} /> */}
     </HomeStack.Navigator>
   );
 
@@ -82,8 +83,17 @@ export function GeneralStackScreen({navigation, route}){
               <Icon.Button name="ios-menu" size={25} backgroundColor="#009387" onPress={() => navigation.openDrawer()}></Icon.Button>
           )
           }} />
+
+          <GeneralStack.Screen name="GenItemScreen" component={GenItemScreen} options={{
+          title:'Item',
+          }} />
+
           <GeneralStack.Screen name="GenAddEntryScreen" component={GenAddEntryScreen} options={{
           title:'Add Entry',
+          }} />
+
+          <GeneralStack.Screen name="UpdateEntryScreen" component={UpdateEntryScreen} options={{
+          title:'Update Entry',
           }} />
     </GeneralStack.Navigator>
     );

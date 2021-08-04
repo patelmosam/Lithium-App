@@ -1,78 +1,88 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, ScrollView, View, Text, form } from 'react-native';
 // import AppBar from '../components/AppBar';
 // import { contactUpdate } from '../reducers/contactReducer';
-import { useDispatch } from 'react-redux'
+import { dataUpdate } from '../reducers/dataReducer';
+import { selectFields } from '../reducers/fieldReducer';
+import { useSelector, useDispatch } from 'react-redux'
 import { useTheme } from '@react-navigation/native';
 import { TextInput, Button } from 'react-native-paper';
 
 function UpdateEntryScreen({ navigation, route }) {
   const { colors } = useTheme();
   const theme = useTheme();
-  const {data} = route.params;
+  const data = route.params.data;
+  const type = route.params.type;
 
   const [formData, setFormData] = useState(data);
+  const [forms, setForms] = useState([]);
+  const fields = useSelector(selectFields);
   const dispatch = useDispatch()
 
+  const keyboardType = {'TEXT': 'default', 'INTEGER': 'numeric'};
+
   const additem = () => {
-    if (formData.name != '' && formData.surname != ''){
-      dispatch(contactUpdate(formData));
-      navigation.navigate('ContactScreen', {data:formData});
-    }
+    // if (formData.name != '' && formData.surname != ''){
+      // dispatch(contactUpdate(formData));
+      // navigation.navigate('ContactScreen', {data:formData});
+    // }
+    dispatch(dataUpdate({data:formData, type: type}));
+    navigation.navigate('GenItemScreen', {data:formData, type: type});
   }
+
+  const Init = () => {
+    let schema, order, key=0;
+    let info = [];
+
+    //TODO: use fields.filter
+    fields.map((field) => {
+      if (field.name == type){
+          schema = field.schema;
+          order = field.fieldOrder;
+      }
+    });
+    // console.log(order);
+    for(let col in order){
+        info.push({id:key, name: order[col], keyboard: keyboardType[schema[order[col]]]});
+        key++;
+        // let test = {name: col};
+        // console.log(formData[test.name]);
+    }
+    setForms(info);
+    // console.log('info',info);
+    // console.log(formData);
+
+  }
+
+    useEffect(() => {
+        Init();
+    },[]);
 
     return (
        
       <View style={styles.container}>
         <ScrollView style={styles.scrollStyle} >
           <View style={styles.circleView}>
-              <View style={styles.ProfilePic}>
+              {/* <View style={styles.ProfilePic}>
               
-              </View>
+              </View> */}
           </View>
-          <View style={styles.inputStyle}>
-          {/* <form onSubmit={additem}> */}
+          
+          { forms.map((form) => ( 
+            form.name == 'id' ? <View key={form.id}></View> :
+            <View key={form.id} style={styles.inputStyle}>
             <TextInput
-              label="First Name"
-              value={formData.name}
+              label={form.name}
+              value={formData[form.name].toString()}
               mode="outlined"
+              keyboardType={form.keyboard}
               left={<TextInput.Icon name='account-outline' />}
-              onChangeText={text => setFormData({...formData, name: text})}
+              onChangeText={text => setFormData({...formData, [form.name]: text})}
             />
+            </View>
+          ))
+          }
 
-            <TextInput
-              label="Last Name"
-              value={formData.surname}
-              mode="outlined"
-              left={<TextInput.Icon name='account-outline' />}
-              onChangeText={text => setFormData({...formData, surname: text})}
-            />
-
-            <TextInput
-              label="Phone No"
-              value={formData.phone_no}
-              mode="outlined"
-              keyboardType = 'numeric'
-              left={<TextInput.Icon name='account-outline' />}
-              onChangeText={text => setFormData({...formData, phone_no: text})}
-            />
-
-            <TextInput
-              label="Gender"
-              value={formData.gander}
-              mode="outlined"
-              left={<TextInput.Icon name='account-outline' />}
-              onChangeText={text => setFormData({...formData, gander: text})}
-            />
-            <TextInput
-              label="Discription"
-              value={formData.discription}
-              mode="outlined"
-              left={<TextInput.Icon name='account-outline' />}
-              onChangeText={text => setFormData({...formData, discription: text})}
-            />
-          {/* </form> */}
-          </View>
           <View style={styles.buttonView}>
             <View style={styles.cancelButton} >
             <Button color='red' onPress={() => navigation.goBack()} mode="contained"> Cancel </Button>

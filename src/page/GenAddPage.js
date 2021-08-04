@@ -19,7 +19,7 @@ function GenAddEntryScreen({ navigation, route }) {
   const keyboardType = {'TEXT': 'default', 'INTEGER': 'numeric'};
 
   const additem = () => {
-    if (formData.name != '' && formData.surname != ''){
+    if (formData.name != ''){
       dispatch(dataAdded({id:0, data:formData, type:type}));
     // console.log(formData);
       navigation.goBack();
@@ -27,20 +27,26 @@ function GenAddEntryScreen({ navigation, route }) {
   }
 
   const Init = () => {
-    //   console.log(type)
-    let schema, key=0;
-    let info = [];
+      // console.log(type)
+    let schema, order, key=0;
+    let info = [], initstate = {};
 
+    //TODO: use fields.filter
     fields.map((field) => {
         if (field.name == type){
             schema = field.schema;
+            order = field.fieldOrder;
         }
     });
-    for(let col in schema){
-        info.push({id:key, name: col, keyboard: keyboardType[schema[col]]});
+
+    for(let col in order){
+        info.push({id:key, name: order[col], keyboard: keyboardType[schema[order[col]]]});
+        initstate[order[col]] = "";
         key++;
     }
     setForms(info);
+    setFormData(initstate);
+    // console.log(formData, initstate);
   }
 
   useEffect(() => {
@@ -58,10 +64,11 @@ function GenAddEntryScreen({ navigation, route }) {
           </View>
           
           { forms.map((form) => (
+            form.name == 'id' ? <View key={form.id}></View> :
               <View key={form.id} style={styles.inputStyle}>
             <TextInput
               label={form.name}
-              value={formData.name}
+              value={formData[form.name]}
               mode="outlined"
               keyboardType={form.keyboard}
               left={<TextInput.Icon name='account-outline' />}

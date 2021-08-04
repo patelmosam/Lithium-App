@@ -31,8 +31,8 @@ export default function manageFieldsScreen({ navigation }) {
          
           { fields.map((field) => (
             <View key={field.id} style={styles.displayItem}>
-              <Text style={styles.TextStyle}>Screen Name: {field.name}</Text>
-              <Text style={styles.TextStyle}>Schema: {JSON.stringify(field.schema)}</Text>
+              <Text style={styles.TextStyle}> {field.name}</Text>
+              <Text style={styles.TextStyle}>{JSON.stringify(field.schema)}</Text>
             </View>
           ))}
 
@@ -62,9 +62,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },  
   displayItem: {
-    // flex: 1,
-    // flexDirection: 'co',
+    borderRadius: 20,
+    backgroundColor: '#222',
     margin: 5,
-    justifyContent: 'space-around'
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 5,
   }
 });

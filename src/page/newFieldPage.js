@@ -33,11 +33,12 @@ export default function newFieldScreen({ navigation }) {
 
   const updateData = () => {
      let fields = {};
-
+      let fieldOrder = [];
      for (let i in fieldName){
         fields[fieldName[i]] = selectedType[i];
+        fieldOrder.push(fieldName[i]);
      }
-     dispatch(AddField({'id':0, 'name':name, 'schema':fields}));
+     dispatch(AddField({'id':0, 'name':name, 'schema':fields, 'fieldOrder': fieldOrder}));
      navigation.goBack();
   }
 

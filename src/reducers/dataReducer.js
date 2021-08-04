@@ -8,7 +8,6 @@ export const dataSlice = createSlice({
   },
   reducers: {
     dataInit: (state, action) => {
-        // console.log(action.payload)
         const type = action.payload.type;
         state.data[type] = []
         action.payload.data.map((data) => {
@@ -26,29 +25,30 @@ export const dataSlice = createSlice({
 
     },
     dataDelete: (state, action) => {
-        DeleteData(action.payload);
+        DeleteData(action.payload.type, action.payload.id);
 
-        if (state.data.length > 0) {
-            let newList = state.data.filter(data => {
-                if (data.id === action.payload)
+        const type = action.payload.type;
+        if (state.data[type].length > 0) {
+            let newList = state.data[type].filter(data => {
+                if (data.id === action.payload.id)
                   return false
                 else
                   return true
             })
-        state.data = newList;
+        state.data[type] = newList;
         }
     },
     dataUpdate: (state, action) => {
-        updateData(action.payload);
-
-        if (state.data.length > 0) {
-            let newList = state.data.map(data => {
-              if (data.id === action.payload.id)
-                return action.payload
+        updateData(action.payload.type, action.payload.data);
+        const type = action.payload.type;
+        if (state.data[type].length > 0) {
+            let newList = state.data[type].map(data => {
+              if (data.id === action.payload.data.id)
+                return action.payload.data
               else
                 return data
             })
-        state.data = newList;
+        state.data[type] = newList;
         }
     }
 }})

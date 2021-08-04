@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import {StyleSheet, View, Text, ScrollView } from 'react-native';
+import {StyleSheet, View, Text, ScrollView, TouchableWithoutFeedback } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux'
 import FABGroup from '../components/FAB';
 import { useTheme, useRoute } from '@react-navigation/native';
 import * as SQLite from 'expo-sqlite';
-// import { InitDB } from '../shared/database';
-// import { GenAddEntryScreen } from './GenAddPage';
 import { selectData, dataInit } from '../reducers/dataReducer';
-import { useIsFocused } from "@react-navigation/native";
+import { selectFields } from '../reducers/fieldReducer';
 
 
 export default function GeneralScreen({ navigation, name }) {
@@ -15,10 +13,10 @@ export default function GeneralScreen({ navigation, name }) {
   const { colors } = useTheme();
   const theme = useTheme();
   const route = useRoute();
-  // const [state, setState] = useState({ data: null});
   const appData = useSelector(selectData);
   const dispatch = useDispatch();
-  const isFocused = useIsFocused();
+  const [itemName, setItemName] = useState();
+  const fields = useSelector(selectFields);
 
     const fetchData = (table) => {
       const db = SQLite.openDatabase('database3.db')
@@ -30,24 +28,36 @@ export default function GeneralScreen({ navigation, name }) {
       })
     }
 
-    // const Init = () => {
-    //     console.log(route.name)
-    // }
+    const Init = () => {
+        
+        let order;
+        fields.map((field) => {
+          if (field.name == route.name){
+            order = field.fieldOrder;
+            
+          }
+        });
+        setItemName(order);
+        // console.log(order);
+        // console.log(itemName);
+    }
 
     useEffect(() => {
-        // Init();
+        Init();
         fetchData(route.name);
-    }, [navigation.isFocused])
+    }, [])
 
   return (
      
       <View style={styles.container}>
        <ScrollView style={styles.scrollStyle} >
-         {/* {console.log(appData)} */}
+         {/* {console.log(fields.f)} */}
        { appData[route.name] && appData[route.name].map((data) => (
-         <View key={data.id}>
-           <Text style={styles.TextStyle}>{JSON.stringify(data)}</Text>
-         </View>
+         <TouchableWithoutFeedback key={data.id} onPress={() => navigation.navigate('GenItemScreen', {data:data, type:route.name})}>
+          <View  style={styles.itemStyle}>
+            <Text style={styles.TextStyle}>{data[itemName[0]]}</Text>
+          </View>
+         </TouchableWithoutFeedback>
        ))}
         </ScrollView>
           <FABGroup navigation={navigation} screenName="GenAddEntryScreen" type={route.name}/>
@@ -72,4 +82,12 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
   },  
+  itemStyle: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 25,
+    backgroundColor: '#222',
+    padding: 10,
+    marginBottom: 5,
+  }
 });
