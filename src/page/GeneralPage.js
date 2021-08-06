@@ -5,7 +5,7 @@ import FABGroup from '../components/FAB';
 import { useTheme, useRoute } from '@react-navigation/native';
 import * as SQLite from 'expo-sqlite';
 import { selectData, dataInit } from '../reducers/dataReducer';
-import { selectFields } from '../reducers/fieldReducer';
+import { selectFields, DB_PATH } from '../reducers/fieldReducer';
 
 
 export default function GeneralScreen({ navigation, name }) {
@@ -19,9 +19,9 @@ export default function GeneralScreen({ navigation, name }) {
   const fields = useSelector(selectFields);
 
     const fetchData = (table) => {
-      const db = SQLite.openDatabase('database3.db')
+      const db = SQLite.openDatabase(DB_PATH);
       db.transaction(tx => {
-        tx.executeSql(`SELECT * FROM ${table}`, null, 
+        tx.executeSql(`SELECT * FROM "${table}"`, null, 
           (txObj, { rows: { _array } }) =>  dispatch(dataInit({data:_array, type: table}))  ,
           (txObj, error) => console.log('Error ', error)
           ) 

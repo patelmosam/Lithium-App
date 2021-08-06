@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import {StyleSheet, View, Text, ScrollView } from 'react-native';
+import {StyleSheet, View, Text, ScrollView, TouchableWithoutFeedback } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux'
 import FABGroup from '../components/FAB';
 import { useTheme } from '@react-navigation/native';
 // import { InitDB } from '../shared/database';
 import { selectFields } from '../reducers/fieldReducer';
+import { List } from 'react-native-paper';
 
 export default function manageFieldsScreen({ navigation }) {
 
   const { colors } = useTheme();
   const theme = useTheme();
-
+  const [expanded, setExpanded] = React.useState(true);
+  const handlePress = () => setExpanded(!expanded);
   // const [state, setState] = useState({ data: null});
   const fields = useSelector(selectFields)
 //   const dispatch = useDispatch()
@@ -30,10 +32,23 @@ export default function manageFieldsScreen({ navigation }) {
         {/* <Text style={styles.TextStyle}>Hello</Text> */}
          
           { fields.map((field) => (
-            <View key={field.id} style={styles.displayItem}>
-              <Text style={styles.TextStyle}> {field.name}</Text>
-              <Text style={styles.TextStyle}>{JSON.stringify(field.schema)}</Text>
-            </View>
+            // <View key={field.id} style={styles.displayItem}>
+            //   <Text style={styles.TextStyle}> {field.name}</Text>
+            //   <Text style={styles.TextStyle}>{JSON.stringify(field.schema)}</Text>
+            // </View>
+            <TouchableWithoutFeedback key={field.id} onPress={() => navigation.navigate('TableItemScreem', {field: field})}>
+              <List.Section key={field.id} >
+                <List.Accordion
+                  title={field.name}
+                  left={props => <List.Icon {...props} icon="folder" />}
+                  // expanded={expanded}
+                  onPress={handlePress}>
+                    {field.fieldOrder.map((key) => (
+                      <List.Item key={key} title={ key+' : '+field.schema[key]} />
+                    ))}
+                </List.Accordion>
+              </List.Section>
+            </TouchableWithoutFeedback>
           ))}
 
         

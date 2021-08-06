@@ -11,6 +11,8 @@ import newFieldScreen from '../page/newFieldPage';
 import manageFieldsScreen from '../page/manageFields';
 import GenAddEntryScreen from '../page/GenAddPage';
 import GenItemScreen from '../page/GenItemPage';
+import TableItemScreen from '../page/TableItemPage';
+import TableUpdateScreen from '../page/TableUpdatePage';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const HomeStack = createStackNavigator();
@@ -110,13 +112,19 @@ export const newFieldStackScreen = ({navigation}) => (
           }
       }}>
           <newFieldStack.Screen name="manageFieldsScreen" component={manageFieldsScreen} options={{
-            title:'Manage Fields',
+            title:'Manage Tables',
             headerLeft: () => (
                 <Icon.Button name="ios-menu" size={25} backgroundColor="#009387" onPress={() => navigation.openDrawer()}></Icon.Button>
             )
           }} />
           <newFieldStack.Screen name="newFieldScreen" component={newFieldScreen} options={{
-            title:'Create New Field',
+            title:'Create New Table',
+          }} />
+          <newFieldStack.Screen name="TableItemScreem" component={TableItemScreen} options={{
+            title:'Table Item',
+          }} />
+          <newFieldStack.Screen name="TableUpdateScreen" component={TableUpdateScreen} options={{
+            title:'Edit Table',
           }} />
     </newFieldStack.Navigator>
 );

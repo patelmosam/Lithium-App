@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { InsertData, DeleteData, updateData } from '../shared/database';
+import { DB_PATH } from './fieldReducer';
 
 export const dataSlice = createSlice({
   name: 'appData',
@@ -20,12 +21,12 @@ export const dataSlice = createSlice({
         if (state.data[type].length > 0){
           newId = state.data[type][state.data[type].length - 1].id + 1;
         }
-        InsertData(type, {id: newId, ...action.payload.data});
+        InsertData(DB_PATH, type, {id: newId, ...action.payload.data});
         state.data[type].push({id: newId, ...action.payload.data});
 
     },
     dataDelete: (state, action) => {
-        DeleteData(action.payload.type, action.payload.id);
+        DeleteData(DB_PATH, action.payload.type, action.payload.id);
 
         const type = action.payload.type;
         if (state.data[type].length > 0) {
@@ -39,7 +40,7 @@ export const dataSlice = createSlice({
         }
     },
     dataUpdate: (state, action) => {
-        updateData(action.payload.type, action.payload.data);
+        updateData(DB_PATH, action.payload.type, action.payload.data);
         const type = action.payload.type;
         if (state.data[type].length > 0) {
             let newList = state.data[type].map(data => {
