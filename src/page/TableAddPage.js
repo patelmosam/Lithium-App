@@ -2,25 +2,25 @@ import React, { useState, useEffect } from 'react';
 import {StyleSheet, View, ScrollView, Text } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux'
 import { useTheme } from '@react-navigation/native';
-// import { InitDB } from '../shared/database';
 import { TextInput, Button } from 'react-native-paper';
 import {Picker} from '@react-native-picker/picker';
-import { AddField } from '../reducers/fieldReducer';
+import { AddTable, selectTables } from '../reducers/tableReducer';
+import { dataInit } from '../reducers/dataReducer';
 
-export default function newFieldScreen({ navigation }) {
+export default function TableAddScreen({ navigation }) {
 
   const { colors } = useTheme();
   const theme = useTheme();
 
   const dispatch = useDispatch();
-  // const fields = useSelector(selectFields);
+  const dBList = useSelector(selectTables);
 
   const [name, setName] = useState("");
 
   const [keys, setKeys] = useState([0]);
   const [fieldName, setfieldName] = useState({0:''});
   const [selectedType, setSelectedType] = useState({0:null});
-  
+  const [dBType, setdBType] = useState();
 
   const additem = () => {
       setfieldName({...fieldName, [keys.length]:''});
@@ -32,13 +32,12 @@ export default function newFieldScreen({ navigation }) {
     }
 
   const updateData = () => {
-     let fields = {};
-      let fieldOrder = [];
+     let table = {};
      for (let i in fieldName){
-        fields[fieldName[i]] = selectedType[i];
-        fieldOrder.push(fieldName[i]);
+        table[fieldName[i]] = selectedType[i];
      }
-     dispatch(AddField({'id':0, 'name':name, 'schema':fields, 'fieldOrder': fieldOrder}));
+     dispatch(AddTable({'table':name, 'dBName':dBType, 'schema':table}));
+     dispatch(dataInit({table:name, db:dBType, data:[]}));
      navigation.goBack();
   }
 
@@ -53,6 +52,21 @@ export default function newFieldScreen({ navigation }) {
               model='flat'
               onChangeText={text => setName(text)}
             />
+            <Picker
+              label='DB Name'
+              mode='dropdown'
+              dropdownIconColor='white'
+              selectedValue={dBType}
+              style={styles.pickerStyle}
+              onValueChange={(itemValue, itemIndex) =>
+                setdBType(itemValue)
+              }>
+              {
+                Object.keys(dBList).map((db) => (
+                  <Picker.Item key={db} label={db} value={db} />
+                ))
+              }
+            </Picker>
         </View>
         {/* {console.log('field',state.fields)} */}
         {keys.map((key) => (
@@ -67,7 +81,7 @@ export default function newFieldScreen({ navigation }) {
                 </View>
                 <View style={styles.dropDown}>
                 
-                   <Picker
+                  <Picker
                     label='Type'
                     mode='dropdown'
                     dropdownIconColor='white'

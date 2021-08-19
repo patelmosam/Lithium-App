@@ -1,52 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, ScrollView, View, Text, form } from 'react-native';
-import { dataAdded, selectData } from '../reducers/dataReducer';
+import { dataAdded } from '../reducers/dataReducer';
 import { useSelector, useDispatch } from 'react-redux'
 import { useTheme } from '@react-navigation/native';
 import { TextInput, Button } from 'react-native-paper';
-import { selectFields, InitFields } from '../reducers/fieldReducer';
+import { selectTables } from '../reducers/tableReducer';
 
-function GenAddEntryScreen({ navigation, route }) {
+function GenAddScreen({ navigation, route }) {
   const { colors } = useTheme();
   const theme = useTheme();
   const [formData, setFormData] = useState({});
   const [forms, setForms] = useState([]);
-  const fields = useSelector(selectFields);
-//   const contacts = useSelector(selectData);
+  const tables = useSelector(selectTables);
   const dispatch = useDispatch()
-  const type = route.params.type;
+  const tableName = route.params.tableName;
+  const dbName = route.params.dbName;
 
   const keyboardType = {'TEXT': 'default', 'INTEGER': 'numeric'};
 
   const additem = () => {
     if (formData.name != ''){
-      dispatch(dataAdded({id:0, data:formData, type:type}));
-    // console.log(formData);
+      dispatch(dataAdded({data:formData, table:tableName, db:dbName}));
       navigation.goBack();
     }
   }
 
   const Init = () => {
-      // console.log(type)
-    let schema, order, key=0;
+    let key=0;
     let info = [], initstate = {};
 
-    //TODO: use fields.filter
-    fields.map((field) => {
-        if (field.name == type){
-            schema = field.schema;
-            order = field.fieldOrder;
-        }
-    });
-
-    for(let col in order){
-        info.push({id:key, name: order[col], keyboard: keyboardType[schema[order[col]]]});
-        initstate[order[col]] = "";
-        key++;
+    for (let col in tables[dbName][tableName]){
+      info.push({id:key, name: col, keyboard: keyboardType[tables[dbName][tableName][col]]});
+      initstate[col] = "";
+      key++;
     }
     setForms(info);
+    initstate['id'] = 0;
     setFormData(initstate);
-    // console.log(formData, initstate);
   }
 
   useEffect(() => {
@@ -58,9 +48,6 @@ function GenAddEntryScreen({ navigation, route }) {
       <View style={styles.container}>
         <ScrollView style={styles.scrollStyle} >
           <View style={styles.circleView}>
-              {/* <View style={styles.ProfilePic}> */}
-              
-              {/* </View> */}
           </View>
           
           { forms.map((form) => (
@@ -78,8 +65,6 @@ function GenAddEntryScreen({ navigation, route }) {
           ))
           }
             
-          {/* </form> */}
-          
           <View style={styles.buttonView}>
             <View style={styles.cancelButton} >
             <Button color='red' onPress={() => navigation.goBack()} mode="contained"> Cancel </Button>
@@ -94,7 +79,7 @@ function GenAddEntryScreen({ navigation, route }) {
     );
   }
 
-export default GenAddEntryScreen;
+export default GenAddScreen;
 
 const styles = StyleSheet.create({
   container: { 

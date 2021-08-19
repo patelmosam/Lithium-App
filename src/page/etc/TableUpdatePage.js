@@ -2,21 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, ScrollView, View, Text, form } from 'react-native';
 // import AppBar from '../components/AppBar';
 // import { contactUpdate } from '../reducers/contactReducer';
-import { dataUpdate } from '../reducers/dataReducer';
-import { selectFields } from '../reducers/fieldReducer';
+// import { dataUpdate } from '../reducers/dataReducer';
+// import { selectFields } from '../reducers/fieldReducer';
 import { useSelector, useDispatch } from 'react-redux'
 import { useTheme } from '@react-navigation/native';
 import { TextInput, Button } from 'react-native-paper';
 
-function UpdateEntryScreen({ navigation, route }) {
+function TableUpdateScreen({ navigation, route }) {
   const { colors } = useTheme();
   const theme = useTheme();
   const data = route.params.data;
-  const type = route.params.type;
 
-  const [formData, setFormData] = useState(data);
+  const [formData, setFormData] = useState(data.fields);
   const [forms, setForms] = useState([]);
-  const fields = useSelector(selectFields);
+  // const fields = useSelector(selectFields);
   const dispatch = useDispatch()
 
   const keyboardType = {'TEXT': 'default', 'INTEGER': 'numeric'};
@@ -26,8 +25,9 @@ function UpdateEntryScreen({ navigation, route }) {
       // dispatch(contactUpdate(formData));
       // navigation.navigate('ContactScreen', {data:formData});
     // }
-    dispatch(dataUpdate({data:formData, type: type}));
-    navigation.navigate('GenItemScreen', {data:formData, type: type});
+    console.log(formData);
+    // dispatch(dataUpdate({data:formData, type: type}));
+    // navigation.navigate('GenItemScreen', {data:formData, type: type});
   }
 
   const Init = () => {
@@ -55,33 +55,29 @@ function UpdateEntryScreen({ navigation, route }) {
   }
 
     useEffect(() => {
-        Init();
+        // Init();
+        // console.log(data);
     },[]);
 
     return (
        
       <View style={styles.container}>
         <ScrollView style={styles.scrollStyle} >
-          <View style={styles.circleView}>
-              {/* <View style={styles.ProfilePic}>
-              
-              </View> */}
-          </View>
+         
           
-          { forms.map((form) => ( 
-            form.name == 'id' ? <View key={form.id}></View> :
-            <View key={form.id} style={styles.inputStyle}>
-            <TextInput
-              label={form.name}
-              value={formData[form.name].toString()}
-              mode="outlined"
-              keyboardType={form.keyboard}
-              left={<TextInput.Icon name='account-outline' />}
-              onChangeText={text => setFormData({...formData, [form.name]: text})}
-            />
+          {/* { data.fieldOrder.map((key) => ( 
+            <View key={key} style={styles.inputStyle}>
+                <TextInput
+                    label={key}
+                    value={formData[key]}
+                    mode="outlined"
+                    keyboardType='default'
+                    left={<TextInput.Icon name='account-outline' />}
+                    onChangeText={text => setFormData({...formData, [key]: text})}
+                />
             </View>
           ))
-          }
+          } */}
 
           <View style={styles.buttonView}>
             <View style={styles.cancelButton} >
@@ -97,7 +93,7 @@ function UpdateEntryScreen({ navigation, route }) {
     );
   }
 
-export default UpdateEntryScreen;
+export default TableUpdateScreen;
 
 const styles = StyleSheet.create({
   container: { 

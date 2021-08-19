@@ -1,51 +1,56 @@
 import React, {useState, useEffect} from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import DrawerContent from '../components/CustomSidebar';
-import { HomeStackScreen, newFieldStackScreen, GeneralStackScreen, SettingsStackScreen } from './StackNavigator';
+import { HomeStackScreen, newFieldStackScreen, 
+        GeneralStackScreen, SettingsStackScreen, DatabaseStackScreen } from './StackNavigator';
 import { useSelector, useDispatch } from 'react-redux'
-import { selectFields } from '../reducers/fieldReducer';
-// import { dataAdded, datasInit, selectData } from '../reducers/dataReducer';
-import { InitFields, AddField } from '../reducers/fieldReducer';
+import { selectTables, InitTables } from '../reducers/tableReducer';
 import * as SQLite from 'expo-sqlite';
-import { InitDB, InitTable } from '../shared/database';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Drawer = createDrawerNavigator();
-const DB_PATH = 'default.db';
 
 export default function DrawerNavigator(){
-    const screens = useSelector(selectFields)
-    const dispatch = useDispatch()
+    const [dBList, setDBList] = useState([]);
+    const dispatch = useDispatch();
+    const tables = useSelector(selectTables);
     
-
-    const defaultFields = [
-        {name:'Contacts',
-        schema: {name: 'TEXT', surname: 'TEXT', phone_no: 'INTEGER', gender: 'TEXT', discription: 'TEXT'},
-        fieldOrder: ['name', 'surname', 'phone_no', 'gender', 'discription']},
-    ];
-
-    const InitTables = (defaultTables) => {
-        const db = SQLite.openDatabase(DB_PATH);
-        db.transaction(tx => {
-        tx.executeSql('SELECT * FROM TablesInfo', null, 
-            (txObj, { rows: { _array } }) =>  dispatch(InitFields({data:_array, default: defaultTables}))  ,
+    const getData = async () => {
+        try {
+            const jsonValue = await AsyncStorage.getItem('DBNameList');
+            setDBList(JSON.parse(jsonValue));
+            return jsonValue != null ? JSON.parse(jsonValue) : null;
+        } catch(e) {
+            console.log('error');
+        }
+    }
+  
+    const getTablesInfo = (db_path) => {
+        const quary = "SELECT * FROM sqlite_master WHERE type='table'";
+        const db = SQLite.openDatabase(db_path);
+        db.transaction(tx => (
+          tx.executeSql(quary, null, 
+            (txObj, { rows: { _array } }) =>  dispatch(InitTables({dBName:db_path, data:_array})),
             (txObj, error) => console.log('Error ', error)
             ) 
-        })
+        ));
     }
 
-    const init = () => {
-        const quary2 = 'CREATE TABLE IF NOT EXISTS TablesInfo (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, schema TEXT)';
-        InitDB(DB_PATH, quary2);
-        defaultFields.map((item) => InitTable(DB_PATH, item.name, item.schema));
-        InitTables(defaultFields);    
+    const setDB = () => {
+        dBList.map((key) => {
+            getTablesInfo(key);
+        });
     }
 
     useEffect(() => {
-        init();      
-      }, [])
+        let DBNameList = getData(); 
+      }, []);
+
+    useEffect(() => {
+        setDB();
+    }, [dBList]);
 
     return (
-        // <NavigationContainer theme={theme}>
             <Drawer.Navigator initialRouteName="HomeStack"
                 drawerContent={(props) => <DrawerContent {...props} />}
             > 
@@ -57,18 +62,23 @@ export default function DrawerNavigator(){
                     name="settings" 
                     component={SettingsStackScreen} />
 
-                { screens.map((screen) => (
-                    <Drawer.Screen
-                        key={screen.id}
-                        name={screen.name} 
-                        component={GeneralStackScreen} />
+                { Object.keys(tables).map((table) => (
+                    Object.keys(tables[table]).map((name) => (
+                        <Drawer.Screen
+                            key={name}
+                            name={name} 
+                            component={GeneralStackScreen} />
+                    ))
                 ))}
                 
                 <Drawer.Screen 
                     name="newFieldStack" 
                     component={newFieldStackScreen} />
 
+                <Drawer.Screen 
+                    name="DatabaseStack" 
+                    component={DatabaseStackScreen} />
+
             </Drawer.Navigator>
-        // </NavigationContainer>
     )
 }

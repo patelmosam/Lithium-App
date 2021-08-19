@@ -1,56 +1,29 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { StyleSheet, View, Text, ScrollView } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux'
-// import { selectData } from '../reducers/dataReducer'
-// import AppBar from '../components/AppBar';
+import { useDispatch } from 'react-redux'
 import { dataDelete } from '../reducers/dataReducer';
 import { useTheme } from '@react-navigation/native';
 import { Button } from 'react-native-paper';
-// import { InitFields } from '../reducers/fieldReducer';
-import { selectFields } from '../reducers/fieldReducer';
 
 export default function GenItemScreen({ navigation, route }) {
-  const { colors } = useTheme();
-  const theme = useTheme();
-//   const appData = useSelector(selectData);
+    const { colors } = useTheme();
+    const theme = useTheme();
     const dispatch = useDispatch();
     const data = route.params.data;
-    const type = route.params.type;
-    const fields = useSelector(selectFields);
-    const [itemList, setItemList] = useState([]);
+    const tableName = route.params.tableName;
+    const itemList = route.params.col;
+    const dbName = route.params.dbName;
 
     const deleteData = (id) => {
-        dispatch(dataDelete({id:id, type:type}));
+        dispatch(dataDelete({id:id, table:tableName, db:dbName}));
         navigation.goBack();
     }
-
-    const Init = () => {
-      let order;
-      // console.log('fiels', fields);
-      fields.map((field) => {
-        if (field.name == type){
-          order = field.fieldOrder;
-          // console.log('oreder',field.fieldOrder);
-        }
-      });
-      setItemList(order);
-      // console.log(itemList);
-      // console.log(order);
-    }
-
-    useEffect(() => {
-      Init();
-    },[]);
 
   return (
      
       <View style={styles.container}>
         <ScrollView style={styles.scrollStyle} >
-          {/* <View style={styles.circleView}>
-              <View style={styles.ProfilePic}>
-                <Text style={styles.defaultDP}>{data.name[0]}</Text>
-              </View>
-          </View> */}
+         
         {
             itemList.map((key) => (
                 key == 'id' ? <View key={key}></View> :
@@ -64,7 +37,7 @@ export default function GenItemScreen({ navigation, route }) {
           <Button color='red' onPress= { () => deleteData(data.id)} mode="contained" >Delete</Button>
         </View>
         <View style={styles.editButton}>
-          <Button mode="contained" onPress= { () => navigation.navigate('UpdateEntryScreen', {data:data, type:type})} >Edit</Button>
+          <Button mode="contained" onPress= { () => navigation.navigate('GenUpdateScreen', {data:data, tableName:tableName, dbName:dbName, itemList:itemList})} >Edit</Button>
         </View>
         </View>
           </ScrollView>

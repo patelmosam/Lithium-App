@@ -3,16 +3,18 @@ import { StyleSheet, View, Text, ScrollView } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux'
 import { useTheme } from '@react-navigation/native';
 import { TextInput, Button } from 'react-native-paper';
-import { DeleteField } from '../reducers/fieldReducer';
+import { DeleteTable } from '../reducers/tableReducer';
 
 export default function TableItemScreen({ navigation, route }) {
   const { colors } = useTheme();
   const theme = useTheme();
   const dispatch = useDispatch();
-  const data = route.params.field;
+  const tableName = route.params.tableName;
+  const data = route.params.table;
+  const dbName = route.params.dbName;
 
-    const handleDelete = (name, id) => {
-        dispatch(DeleteField({table: name, id: id}));
+    const handleDelete = (id) => {
+        dispatch(DeleteTable({table: tableName, dBName: dbName}));
         navigation.goBack();
     }
 
@@ -22,18 +24,18 @@ export default function TableItemScreen({ navigation, route }) {
       <View style={styles.container}>
         <ScrollView style={styles.scrollStyle} >
         <View style={styles.datafield}>
-          <Text style={styles.TextStyle}> {data.name} </Text>
+          <Text style={styles.TextStyle}> {tableName} </Text>
         </View>
         {
-            data.fieldOrder.map((key) => (
-                <DisplayItem key={key} name={key} type={data.schema[key]} />
+            Object.keys(data).map((key) => (
+                <DisplayItem key={key} name={key} type={data[key]} />
             ))
         }
 
          
       <View style={styles.buttonView}>
         <View style={styles.deleteButton}>
-          <Button color='red' onPress= { () => handleDelete(data.name, data.id)} mode="contained" >Delete</Button>
+          <Button color='red' onPress= { () => handleDelete()} mode="contained" >Delete</Button>
         </View>
         <View style={styles.editButton}>
           <Button mode="contained" onPress= { () => navigation.goBack()} >Back</Button>

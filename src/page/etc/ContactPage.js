@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { StyleSheet, View, Text, ScrollView } from 'react-native';
 import { useDispatch } from 'react-redux'
-// import { contactDelete } from '../reducers/contactReducer'
-// import AppBar from '../components/AppBar';
 import { useTheme } from '@react-navigation/native';
 import { Button } from 'react-native-paper';
 

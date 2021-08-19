@@ -1,21 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, ScrollView, View, Text, form } from 'react-native';
-// import AppBar from '../components/AppBar';
-// import { contactUpdate } from '../reducers/contactReducer';
 import { dataUpdate } from '../reducers/dataReducer';
-import { selectFields } from '../reducers/fieldReducer';
 import { useSelector, useDispatch } from 'react-redux'
 import { useTheme } from '@react-navigation/native';
 import { TextInput, Button } from 'react-native-paper';
+import { selectTables } from '../reducers/tableReducer';
 
-function TableUpdateScreen({ navigation, route }) {
+function GenUpdateScreen({ navigation, route }) {
   const { colors } = useTheme();
   const theme = useTheme();
   const data = route.params.data;
+  const tableName = route.params.tableName;
+  const dbName = route.params.dbName;
+  const itemList = route.params.itemList;
 
-  const [formData, setFormData] = useState(data.fields);
+  const [formData, setFormData] = useState(data);
   const [forms, setForms] = useState([]);
-  const fields = useSelector(selectFields);
+  const tables = useSelector(selectTables);
   const dispatch = useDispatch()
 
   const keyboardType = {'TEXT': 'default', 'INTEGER': 'numeric'};
@@ -25,56 +26,46 @@ function TableUpdateScreen({ navigation, route }) {
       // dispatch(contactUpdate(formData));
       // navigation.navigate('ContactScreen', {data:formData});
     // }
-    console.log(formData);
-    // dispatch(dataUpdate({data:formData, type: type}));
-    // navigation.navigate('GenItemScreen', {data:formData, type: type});
+    dispatch(dataUpdate({data:formData, table:tableName, db:dbName}));
+    navigation.navigate('GenItemScreen', {data:formData, tableName: tableName, dbName:dbName, itemList:itemList});
   }
 
   const Init = () => {
-    let schema, order, key=0;
+    let key=0;
     let info = [];
 
-    //TODO: use fields.filter
-    fields.map((field) => {
-      if (field.name == type){
-          schema = field.schema;
-          order = field.fieldOrder;
-      }
-    });
-    // console.log(order);
-    for(let col in order){
-        info.push({id:key, name: order[col], keyboard: keyboardType[schema[order[col]]]});
-        key++;
-        // let test = {name: col};
-        // console.log(formData[test.name]);
+    for (let col in tables[dbName][tableName]){
+      info.push({id:key, name: col, keyboard: keyboardType[tables[dbName][tableName][col]]});
+      key++;
     }
     setForms(info);
-    // console.log('info',info);
-    // console.log(formData);
-
   }
 
     useEffect(() => {
-        // Init();
-        // console.log(data);
+        Init();
     },[]);
 
     return (
        
       <View style={styles.container}>
         <ScrollView style={styles.scrollStyle} >
-         
+          <View style={styles.circleView}>
+              {/* <View style={styles.ProfilePic}>
+              
+              </View> */}
+          </View>
           
-          { data.fieldOrder.map((key) => ( 
-            <View key={key} style={styles.inputStyle}>
-                <TextInput
-                    label={key}
-                    value={formData[key]}
-                    mode="outlined"
-                    keyboardType='default'
-                    left={<TextInput.Icon name='account-outline' />}
-                    onChangeText={text => setFormData({...formData, [key]: text})}
-                />
+          { forms.map((form) => ( 
+            form.name == 'id' ? <View key={form.id}></View> :
+            <View key={form.id} style={styles.inputStyle}>
+            <TextInput
+              label={form.name}
+              value={formData[form.name].toString()}
+              mode="outlined"
+              keyboardType={form.keyboard}
+              left={<TextInput.Icon name='account-outline' />}
+              onChangeText={text => setFormData({...formData, [form.name]: text})}
+            />
             </View>
           ))
           }
@@ -93,7 +84,7 @@ function TableUpdateScreen({ navigation, route }) {
     );
   }
 
-export default TableUpdateScreen;
+export default GenUpdateScreen;
 
 const styles = StyleSheet.create({
   container: { 

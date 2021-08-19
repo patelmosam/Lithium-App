@@ -18,12 +18,12 @@ import {
 
 import{ ThemeContext } from '../components/context';
 import { useSelector, useDispatch } from 'react-redux'
-import { selectFields } from '../reducers/fieldReducer';
+import { selectTables } from '../reducers/tableReducer';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 
 export default function DrawerContent(props) {
-    const screens = useSelector(selectFields)
+    const tables = useSelector(selectTables)
     const dispatch = useDispatch()
 
     const paperTheme = useTheme();
@@ -73,20 +73,22 @@ export default function DrawerContent(props) {
                             label="Home"
                             onPress={() => {props.navigation.navigate('HomeStack')}}
                         />
-                       
+                        
                         {
-                            screens.map((screen) => (
-                            <DrawerItem key={screen.id}
-                                icon={({color, size}) => (
-                                    <Icon 
-                                    name="folder" 
-                                    color={color}
-                                    size={size}
+                            Object.keys(tables).map((table) => (
+                                Object.keys(tables[table]).map((key) => (
+                                    <DrawerItem key={key}
+                                        icon={({color, size}) => (
+                                            <Icon 
+                                            name="folder" 
+                                            color={color}
+                                            size={size}
+                                            />
+                                        )}
+                                        label={key}
+                                        onPress={() => {props.navigation.navigate(key, {name:key, dbName:table})}}
                                     />
-                                )}
-                                label={screen.name}
-                                onPress={() => {props.navigation.navigate(screen.name, {name:screen.name})}}
-                            />
+                                ))
                             ))
                         }
 
@@ -132,13 +134,13 @@ export default function DrawerContent(props) {
                 <DrawerItem 
                     icon={({color, size}) => (
                         <Icon 
-                        name="exit-to-app" 
+                        name="database-plus" 
                         color={color}
                         size={size}
                         />
                     )}
                     label="Database"
-                    onPress={() => {console.log('Database CLicked')}}
+                    onPress={() => {props.navigation.navigate('DatabaseStack')}}
                 />
             </Drawer.Section>
         </View>

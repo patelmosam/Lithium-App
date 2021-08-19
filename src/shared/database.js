@@ -1,10 +1,12 @@
 import * as SQLite from 'expo-sqlite';
 
-export function InitDB(db_path, quary) {
+export function InitDB(db_path, quary=null) {
   const db = SQLite.openDatabase(db_path)
-  db.transaction(tx => {
-        tx.executeSql(quary)
-  })
+  if (quary!=null){
+    db.transaction(tx => {
+          tx.executeSql(quary)
+    })
+  }
 }
 
 export function InitTable(db_path, table, fields){
@@ -55,6 +57,7 @@ export function InsertInfo(db_path, data) {
 export function InsertData(db_path, table, data) {
 
   let quary_str = `INSERT INTO "${table}" `; //values (`;;
+  // console.log(data);
 
   const results = Object.keys(data).map((key) => data[key]);
   const coloums = Object.keys(data);
@@ -63,8 +66,7 @@ export function InsertData(db_path, table, data) {
   quary_str = quary_str.substring(0, quary_str.length-1) + ') values (';
   results.map(() => quary_str += ' ?,');
   quary_str = quary_str.substring(0, quary_str.length-1) + ')';
-  console.log(quary_str);
-
+  // console.log(results);
   const db = SQLite.openDatabase(db_path) 
   db.transaction(tx => {
     tx.executeSql(quary_str, results,
@@ -120,7 +122,7 @@ export function UpdateTable(db_path, table, new_table) {
 }
 
 
-export function DeleteTable(db_path, table) {
+export function deleteTable(db_path, table) {
   const quary = `DROP TABLE "${table}"`
 
   const db = SQLite.openDatabase(db_path);
@@ -138,3 +140,18 @@ export function DeleteTable(db_path, table) {
   
 
 }
+
+export function getTablesInfo(db_path, table) {
+  const quary = `pragma table_info(${table});`;
+  const db = SQLite.openDatabase(db_path);
+  let results = db.transaction(tx => (
+    tx.executeSql(quary, null, 
+      (txObj, { rows: { _array } }) =>  _array,
+      (txObj, error) => console.log('Error ', error)
+      ) 
+  ));
+  console.log(results);
+}
+
+
+
