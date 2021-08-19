@@ -9,7 +9,7 @@ export const DB_PATH = 'default.db';
 const storeData = async (value) => {
     try {
         const jsonValue = JSON.stringify(value)
-        console.log(jsonValue)
+        // console.log(jsonValue)
       await AsyncStorage.setItem('DBNameList', jsonValue)
     } catch (e) {
       console.log('error storing value',e)
@@ -27,9 +27,18 @@ export const tableSlice = createSlice({
             // console.log(dBName)
             InitDB(dBName);
             state.dBList[dBName] = {};
-            storeData(Object.keys(state.dBList))
+            storeData(Object.keys(state.dBList));
         },
+        deleteDB: (state, action) => {
+            const dBName = action.payload.dBName;
+            // console.log(dBName);
+            Object.keys(state.dBList[dBName]).map((table) => {
+                deleteTable(dBName, table);
+            })
+            delete state.dBList[dBName];
+            storeData(Object.keys(state.dBList));
 
+        },
         InitTables : (state, action) => {
             const dBName = action.payload.dBName;
             state.dBList[dBName] = {};
@@ -46,7 +55,7 @@ export const tableSlice = createSlice({
             const table = action.payload.table;
             const schema = action.payload.schema;
             let newSchema = {id: 'INTEGER', ...schema};
-            console.log(newSchema);
+            // console.log(newSchema);
             if (state.dBList[dBName][table] == undefined){
                 InitTable(dBName, table, schema);
                 state.dBList[dBName][table] = newSchema;
@@ -63,6 +72,6 @@ export const tableSlice = createSlice({
     }
 })
 
-export const { AddTable, InitTables, DeleteTable, newDB } = tableSlice.actions
+export const { AddTable, InitTables, DeleteTable, newDB, deleteDB } = tableSlice.actions
 export const selectTables = state => state.tables.dBList;
 export default tableSlice.reducer

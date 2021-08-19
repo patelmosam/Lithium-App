@@ -18,10 +18,11 @@ export default function DrawerNavigator(){
     const getData = async () => {
         try {
             const jsonValue = await AsyncStorage.getItem('DBNameList');
-            setDBList(JSON.parse(jsonValue));
-            return jsonValue != null ? JSON.parse(jsonValue) : null;
+            const value = jsonValue != null ? JSON.parse(jsonValue) : null;
+            setDBList(value);
+            // return jsonValue != null ? JSON.parse(jsonValue) : null;
         } catch(e) {
-            console.log('error');
+            console.log('error',e);
         }
     }
   
@@ -37,13 +38,17 @@ export default function DrawerNavigator(){
     }
 
     const setDB = () => {
-        dBList.map((key) => {
-            getTablesInfo(key);
-        });
+        try{
+            dBList.map((key) => {
+                getTablesInfo(key);
+            });
+        }catch(e){
+            //errors
+        }
     }
 
     useEffect(() => {
-        let DBNameList = getData(); 
+        getData(); 
       }, []);
 
     useEffect(() => {
@@ -70,10 +75,10 @@ export default function DrawerNavigator(){
                             component={GeneralStackScreen} />
                     ))
                 ))}
-                
+                {/*                 
                 <Drawer.Screen 
                     name="newFieldStack" 
-                    component={newFieldStackScreen} />
+                    component={newFieldStackScreen} /> */}
 
                 <Drawer.Screen 
                     name="DatabaseStack" 

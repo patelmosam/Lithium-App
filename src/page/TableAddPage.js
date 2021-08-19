@@ -7,20 +7,20 @@ import {Picker} from '@react-native-picker/picker';
 import { AddTable, selectTables } from '../reducers/tableReducer';
 import { dataInit } from '../reducers/dataReducer';
 
-export default function TableAddScreen({ navigation }) {
+export default function TableAddScreen({ navigation, route }) {
 
   const { colors } = useTheme();
   const theme = useTheme();
 
   const dispatch = useDispatch();
-  const dBList = useSelector(selectTables);
+  // const dBList = useSelector(selectTables);
+  const dBName = route.params.dbName;
 
   const [name, setName] = useState("");
-
   const [keys, setKeys] = useState([0]);
   const [fieldName, setfieldName] = useState({0:''});
   const [selectedType, setSelectedType] = useState({0:null});
-  const [dBType, setdBType] = useState();
+  // const [dBType, setdBType] = useState();
 
   const additem = () => {
       setfieldName({...fieldName, [keys.length]:''});
@@ -36,44 +36,39 @@ export default function TableAddScreen({ navigation }) {
      for (let i in fieldName){
         table[fieldName[i]] = selectedType[i];
      }
-     dispatch(AddTable({'table':name, 'dBName':dBType, 'schema':table}));
-     dispatch(dataInit({table:name, db:dBType, data:[]}));
+     dispatch(AddTable({'table':name, 'dBName':dBName, 'schema':table}));
+     dispatch(dataInit({table:name, db:dBName, data:[]}));
      navigation.goBack();
   }
 
   return (
      
     <View style={styles.container}>
-        <ScrollView style={styles.scrollStyle} >
+      <ScrollView style={styles.scrollStyle} >
+
+        <View style={styles.displayItem}>
+          <View style={{justifyContent:'center'}}>
+            <Text style={styles.dbTitle}>Database :</Text>
+          </View>
+          <View style={{justifyContent:'center',alignItems:'center', width:'60%'}}>
+            <Text style={styles.dbName}>  {dBName}</Text>
+          </View>
+        </View>
+
         <View style={styles.inputStyle}>
             <TextInput
-              label="Display Name"
+              label="Table Name"
               value={name}
               model='flat'
               onChangeText={text => setName(text)}
             />
-            <Picker
-              label='DB Name'
-              mode='dropdown'
-              dropdownIconColor='white'
-              selectedValue={dBType}
-              style={styles.pickerStyle}
-              onValueChange={(itemValue, itemIndex) =>
-                setdBType(itemValue)
-              }>
-              {
-                Object.keys(dBList).map((db) => (
-                  <Picker.Item key={db} label={db} value={db} />
-                ))
-              }
-            </Picker>
         </View>
-        {/* {console.log('field',state.fields)} */}
+
         {keys.map((key) => (
             <View key={key} style={styles.inputItem}>
                 <View style={styles.typeName}>
                     <TextInput
-                        label="Sub-Field"
+                        label="Column"
                         value={fieldName[key]}
                         mode="outlined"
                         onChangeText={text => setfieldName({...fieldName, [key]: text})}
@@ -97,7 +92,7 @@ export default function TableAddScreen({ navigation }) {
                 </View>
             </View>
         ))}
-        <Button  onPress={() => additem()} mode="contained"> Add </Button>
+        <Button  onPress={() => additem()} > Add </Button>
         <View style={styles.buttonView}>
             <View style={styles.cancelButton} >
             <Button color='red' onPress={() => navigation.goBack()} mode="contained"> Cancel </Button>
@@ -106,7 +101,8 @@ export default function TableAddScreen({ navigation }) {
             <Button  onPress={() => updateData()} mode="contained"> Save </Button>
             </View>
         </View>
-        </ScrollView>
+        
+      </ScrollView>
     </View>
     
   );
@@ -163,5 +159,20 @@ const styles = StyleSheet.create({
     width: '28%',
     marginRight: 40,
     
-  }  
+  },
+  displayItem: {
+    margin: 2,
+    // justifyContent: 'center',
+    // alignItems: 'center',
+    padding: 5,
+    flexDirection: 'row',
+  },
+  dbTitle: {
+    color: '#fff',
+    fontSize: 16,
+  },   
+  dbName: {
+    color: '#fff',
+    fontSize: 16,
+  },     
 });

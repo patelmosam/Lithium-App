@@ -73,10 +73,12 @@ export default function DrawerContent(props) {
                             label="Home"
                             onPress={() => {props.navigation.navigate('HomeStack')}}
                         />
-                        
+                    </Drawer.Section>
+
                         {
                             Object.keys(tables).map((table) => (
-                                Object.keys(tables[table]).map((key) => (
+                                <Drawer.Section key={table} title={table}>
+                               { Object.keys(tables[table]).map((key) => (
                                     <DrawerItem key={key}
                                         icon={({color, size}) => (
                                             <Icon 
@@ -88,11 +90,11 @@ export default function DrawerContent(props) {
                                         label={key}
                                         onPress={() => {props.navigation.navigate(key, {name:key, dbName:table})}}
                                     />
-                                ))
+                                ))}
+                                </Drawer.Section>
                             ))
                         }
-
-                        <DrawerItem 
+                        {/* <DrawerItem 
                             icon={({color, size}) => (
                                 <Icon 
                                 name="playlist-plus" 
@@ -102,11 +104,11 @@ export default function DrawerContent(props) {
                             )}
                             label="Manage Tables"
                             onPress={() => {props.navigation.navigate('newFieldStack')}}
-                        />
+                        /> */}
 
                         
 
-                    </Drawer.Section>
+                    
                     <Drawer.Section title="Preferences">
                         <DrawerItem 
                             icon={({color, size}) => (

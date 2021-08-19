@@ -16,8 +16,8 @@ import Icon from 'react-native-vector-icons/Ionicons';
 const HomeStack = createStackNavigator();
 const SettingsStack = createStackNavigator();
 const GeneralStack = createStackNavigator();
-const newFieldStack = createStackNavigator();
 const DatabaseStack = createStackNavigator();
+// const newFieldStack = createStackNavigator();
 
 export const HomeStackScreen = ({navigation}) => (
 
@@ -91,57 +91,62 @@ export function GeneralStackScreen({navigation, route}){
     );
 };
 
-export const newFieldStackScreen = ({navigation}) => (
-    <newFieldStack.Navigator screenOptions={{
-          headerStyle: {
-          backgroundColor: '#009387',
-          },
-          headerTintColor: '#fff',
-          headerTitleStyle: {
-          fontWeight: 'bold'
-          }
-      }}>
-          <newFieldStack.Screen name="TablesScreen" component={TablesScreen} options={{
-            title:'Manage Tables',
-            headerLeft: () => (
-                <Icon.Button name="ios-menu" size={25} backgroundColor="#009387" onPress={() => navigation.openDrawer()}></Icon.Button>
-            )
-          }} />
-          <newFieldStack.Screen name="TableAddScreen" component={TableAddScreen} options={{
-            title:'Create New Table',
-          }} />
-          <newFieldStack.Screen name="TableItemScreem" component={TableItemScreen} options={{
-            title:'Table Item',
-          }} />
-          {/* <newFieldStack.Screen name="TableUpdateScreen" component={TableUpdateScreen} options={{
-            title:'Edit Table',
-          }} /> */}
-    </newFieldStack.Navigator>
-);
-
 
 export const DatabaseStackScreen = ({navigation}) => (
   <DatabaseStack.Navigator screenOptions={{
-        headerStyle: {
-        backgroundColor: '#009387',
-        },
-        headerTintColor: '#fff',
-        headerTitleStyle: {
-        fontWeight: 'bold'
-        },
-        presentation: 'modal'
-    }}>
+    headerStyle: {
+      backgroundColor: '#009387',
+    },
+    headerTintColor: '#fff',
+    headerTitleStyle: {
+      fontWeight: 'bold'
+    },
+    presentation: 'modal'
+  }}>
         <DatabaseStack.Screen name="databaseScreen" component={DatabaseScreen} options={{
           title:'Databases',
           headerLeft: () => (
-              <Icon.Button name="ios-menu" size={25} backgroundColor="#009387" onPress={() => navigation.openDrawer()}></Icon.Button>
-          ),
-          headerRight: () => (
-            <Icon.Button name="add" size={25} backgroundColor="#009387" onPress={() => navigation.openDrawer()}></Icon.Button>
-        )
+            <Icon.Button name="ios-menu" size={25} backgroundColor="#009387" onPress={() => navigation.openDrawer()}></Icon.Button>
+            ),
+          }} />
+        <DatabaseStack.Screen name="TablesScreen" component={TablesScreen} options={{
+          title:'Manage Tables',
+        }} />
+        <DatabaseStack.Screen name="TableAddScreen" component={TableAddScreen} options={{
+          title:'Create New Table',
+        }} />
+        <DatabaseStack.Screen name="TableItemScreem" component={TableItemScreen} options={{
+          title:'Table Item',
         }} />
         
   </DatabaseStack.Navigator>
 );
 
 
+// export const newFieldStackScreen = ({navigation}) => (
+//     <newFieldStack.Navigator screenOptions={{
+//           headerStyle: {
+//           backgroundColor: '#009387',
+//           },
+//           headerTintColor: '#fff',
+//           headerTitleStyle: {
+//           fontWeight: 'bold'
+//           }
+//       }}>
+//           <newFieldStack.Screen name="TablesScreen" component={TablesScreen} options={{
+//             title:'Manage Tables',
+//             headerLeft: () => (
+//                 <Icon.Button name="ios-menu" size={25} backgroundColor="#009387" onPress={() => navigation.openDrawer()}></Icon.Button>
+//             )
+//           }} />
+//           <newFieldStack.Screen name="TableAddScreen" component={TableAddScreen} options={{
+//             title:'Create New Table',
+//           }} />
+//           <newFieldStack.Screen name="TableItemScreem" component={TableItemScreen} options={{
+//             title:'Table Item',
+//           }} /> */}
+//           <newFieldStack.Screen name="TableUpdateScreen" component={TableUpdateScreen} options={{
+//             title:'Edit Table',
+//           }} />
+//     </newFieldStack.Navigator>
+// );

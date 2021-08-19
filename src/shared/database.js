@@ -21,7 +21,7 @@ export function InitTable(db_path, table, fields){
   field_str += ')'
 
   let quary = quary_str + field_str;
-  console.log(quary);
+  // console.log(quary);
 
   const db = SQLite.openDatabase(db_path)
   db.transaction(tx => {
@@ -97,8 +97,8 @@ export function updateData(db_path, table, data){
   quary_str = quary_str.substring(0, quary_str.length-2) + ' WHERE id = ';
   quary_str += data.id.toString();
 
-  console.log(db_path, quary_str);
-  console.log(results);
+  // console.log(db_path, quary_str);
+  // console.log(results);
   const db = SQLite.openDatabase(db_path)
   db.transaction(tx => {
     tx.executeSql(quary_str, results,
@@ -150,7 +150,7 @@ export function getTablesInfo(db_path, table) {
       (txObj, error) => console.log('Error ', error)
       ) 
   ));
-  console.log(results);
+  // console.log(results);
 }
 
 

@@ -17,7 +17,7 @@ function DatabaseScreen({ navigation }) {
   const hideModal = () => setVisible(false);
 
   const handleSave = () => {
-    console.log(dBName);
+    // console.log(dBName);
     dispatch(newDB({dBName: dBName}));
     hideModal();
     setDBName("");
@@ -28,7 +28,7 @@ function DatabaseScreen({ navigation }) {
        <ScrollView style={styles.scrollStyle} >
           {Object.keys(dblist).map((db) => (
             // <Text style={styles.textStyle}> {Object.keys(db)[0]} </Text>
-            <TouchableWithoutFeedback key={db} >
+            <TouchableWithoutFeedback key={db} onPress={() => navigation.navigate('TablesScreen', {dBName:db})} >
               <View  style={styles.itemStyle}>
                 <Text style={styles.TextStyle}>{db}</Text>
               </View>
@@ -55,7 +55,7 @@ function DatabaseScreen({ navigation }) {
           </Modal>
         </Portal>
         <Button style={{marginTop: 10}} mode="contained" onPress={showModal}>
-        New Database
+          New Database
         </Button>
     </Provider>
     
